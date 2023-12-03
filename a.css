@@ -1,0 +1,22 @@
+body {
+    padding: 25px;
+    margin: 25px;
+}
+
+p {
+    font-family: Arial;
+    font-size: 62px;
+    color: #000000;
+    margin-top: 100px
+}
+
+p span { 
+    display: inline-block;
+    -webkit-transition: all 0.1s ease-out;
+}
+
+p span:hover {
+    -webkit-transform: scale(2.0);
+    cursor: pointer;
+    background-color: yellow;
+}

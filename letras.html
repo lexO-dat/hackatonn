@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        span:hover {
+            /* Agrega estilos para resaltar la palabra al hacer hover */
+            background-color: yellow;
+            cursor: none;
+        }
+    </style>
+    <title>Zoom de Palabras</title>
+</head>
+<body>
+
+    <div class="magnifier"></div>
+
+
+    <div class="zoom-container" id="zoomContainer">
+        <p class="zoom-text" aria-hidden="true">Texto que se agranda</p>
+        <!-- Agrega más elementos de texto si es necesario -->
+    </div>
+
+    <div class="zoom-container">
+        <div class="magnifier"></div>
+        <div class="magnified">
+          <!-- Contenido (puede ser una imagen, un párrafo de texto, etc.) -->
+          <p class="zoom-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        </div>
+      </div>
+
+    <script>
+        $(document).ready(function () {
+            // Encuentra todos los elementos <p> con la clase .zoom-text
+            $('.zoom-text').each(function () {
+                // Divide el texto en palabras
+                var words = $(this).text().split(' ');
+
+                // Reemplaza el contenido del párrafo con palabras envueltas en <span>
+                $(this).html(words.map(function (word) {
+                    return '<span>' + word + '</span>';
+                }).join(' '));
+            });
+
+            // Agrega un evento de mouseover a los elementos <span> dentro de .zoom-text
+            $('.zoom-text span').mouseover(function () {
+                // Aplica estilos o realiza acciones adicionales al hacer hover en una palabra
+                $(this).css({
+                    'font-size': '200%',
+                    'color': 'blue'
+                });
+            });
+
+            // Agrega un evento de mouseout para restablecer los estilos al salir del hover
+            $('.zoom-text span').mouseout(function () {
+                $(this).css({
+                    'font-size': '100%',
+                    'color': 'initial'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
