@@ -15,15 +15,6 @@ p mark:hover {
 
 }
 
-.magnifier {
-    position: absolute;
-    width: 100px; /* Ancho del magnifier */
-    height: 100px; /* Altura del magnifier */
-    background-color: rgba(233, 233, 241, 0.3); /* Color del magnifier */
-    border: 2px solid rgba(207, 207, 221, 0.37); /* Borde del magnifier */
-    border-radius: 50%; /* Forma redonda */
-    pointer-events: none; /* Permite clics "pasar" a través del magnifier */
-}
 
 /* Estilos para el contenedor principal utilizando Flexbox */
 #container {

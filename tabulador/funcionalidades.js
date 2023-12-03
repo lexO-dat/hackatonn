@@ -1,17 +1,4 @@
 
-document.addEventListener("DOMContentLoaded", function () {
-    //hopefully real zoom fuction
-    $('p').each(function () {
-        var text = $(this).text().split(' ');
-        for (var i = 0, len = text.length; i < len; i = i + 1) {
-            text[i] = '<mark>' + text[i] + '</mark>';
-        }
-        $(this).html(text.join(' '));
-    });
-});
-
-
-
 // glass effect 
 document.addEventListener("DOMContentLoaded", function () {
     const magnifier = document.querySelector(".magnifier");
