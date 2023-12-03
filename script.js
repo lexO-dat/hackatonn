@@ -1,41 +1,45 @@
-document.addEventListener("DOMContentLoaded", function () {
-    //hopefully real zoom fuction
-    $('p').each(function () {
-        var text = $(this).text().split('') ;
-        for (var i = 0, len = text.length; i < len; i = i + 1) {
-            text[i] = '<span>' + text[i] + '</span>';
-        }
-        $(this).html(text.join(' '));
-    });
-});
 
-// glass effect 
-document.addEventListener("DOMContentLoaded", function () {
-    const magnifier = document.querySelector(".magnifier");
-    const content = document.querySelector(".content");
+        $(document).ready(function () {
+            // hopefully real zoom function
+            $('p').each(function () {
+                var text = $(this).text().split('');
+                for (var i = 0, len = text.length; i < len; i = i + 1) {
+                    text[i] = '<span>' + text[i] + '</span>';
+                }
+                $(this).html(text.join(' '));
+            });
 
-    // Tamaño del magnifier
-    const magnifierSize = 100;
+            const magnifier = $(".magnifier");
 
-    document.addEventListener("mousemove", function (event) {
-        // Obtén las coordenadas del mouse ajustadas al desplazamiento de la página
-        const mouseX = event.clientX + window.scrollX;
-        const mouseY = event.clientY + window.scrollY;
+            // Tamaño del magnifier
+            const magnifierSize = 100;
+            const reactionRadius = 100;
 
-        // Calcula la posición para centrar la lupa en el mouse
-        const magnifierX = mouseX - magnifierSize / 2;
-        const magnifierY = mouseY - magnifierSize / 2;
+            $(document).mousemove(function (event) {
+                // Obtén las coordenadas del mouse ajustadas al desplazamiento de la página
+                const mouseX = event.clientX + window.scrollX;
+                const mouseY = event.clientY + window.scrollY;
 
-        // Actualiza la posición del magnifier para seguir al mouse
-        magnifier.style.left = magnifierX + "px";
-        magnifier.style.top = magnifierY + "px";
+                // Actualiza la posición del magnifier para seguir al mouse
+                magnifier.css({
+                    left: mouseX - magnifierSize / 2 + "px",
+                    top: mouseY - magnifierSize / 2 + "px"
+                });
 
-        // Calcula el porcentaje de desplazamiento en relación con el tamaño de la página
-        const offsetX = (mouseX / window.innerWidth) * 100;
-        const offsetY = (mouseY / window.innerHeight) * 100;
+                // Itera sobre las letras y aplica el efecto solo a las que están dentro del rango
+                $('p span').each(function () {
+                    const spanRect = this.getBoundingClientRect();
+                    const spanX = spanRect.left + spanRect.width / 2;
+                    const spanY = spanRect.top + spanRect.height / 2;
+                    const distance = Math.sqrt(Math.pow(spanX - mouseX, 2) + Math.pow(spanY - mouseY, 2));
 
-        // Cambia la posición de la lupa y el contenido en consecuencia
-        magnifier.style.backgroundPosition = `${offsetX}% ${offsetY}%`;
-        content.style.backgroundPosition = `-${offsetX}% -${offsetY}%`;
-           });
-       });
+                    if (distance < reactionRadius) {
+                        $(this).find('::before').css('background-color', 'yellow');
+                        $(this).css('-webkit-transform', 'scale(3.0)');
+                    } else {
+                        $(this).find('::before').css('background-color', 'transparent');
+                        $(this).css('-webkit-transform', 'scale(1)');
+                    }
+                });
+            });
+        });
