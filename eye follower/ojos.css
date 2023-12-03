@@ -1,0 +1,16 @@
+.contenedor {
+    height: 100vh; 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contenedor > div {
+    border: 1px solid black;
+  }
+
+  #coordenadas {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    color: black;
+  }
