@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .contenedor {
+      height: 100vh; 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .contenedor > div {
+      border: 1px solid black;
+    }
+
+    #coordenadas {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 18px;
+      color: black;
+    }
+  </style>
+  <script async src="https://docs.opencv.org/master/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+  <script src="/webgazer.js" type="text/javascript"></script>
+</head>
+<body>
+  <div class="contenedor">
+    <div class="arriba-izquierda"></div>
+    <div class="arriba-derecha"></div>
+    <div class="abajo-izquierda"></div>
+    <div class="abajo-derecha"></div>
+  </div>
+  <div id="coordenadas"></div>
+
+  <script>
+    const arribaIzquierda = document.querySelector('.arriba-izquierda');
+    const arribaDerecha = document.querySelector('.arriba-derecha');
+    const abajoIzquierda = document.querySelector('.abajo-izquierda');
+    const abajoDerecha = document.querySelector('.abajo-derecha');
+    const coordenadasText = document.getElementById('coordenadas');
+
+    function moveCursor(x, y) {
+        // Ajustar la velocidad de movimiento según tus necesidades
+        const velocidad = 5;
+        // Calcular la nueva posición del cursor
+        const nuevaX = window.screenX + (x - window.innerWidth / 2) * velocidad;
+        const nuevaY = window.screenY + (y - window.innerHeight / 2) * velocidad;
+        // Establecer la nueva posición del cursor
+        window.moveTo(nuevaX, nuevaY);
+      }
+
+    webgazer.setGazeListener(function(data, elapsedTime) {
+      if (data == null) {
+        return;
+      }
+
+      // Cambiar el color de fondo según la posición de la mirada
+      arribaIzquierda.style.backgroundColor = 'white';
+      arribaDerecha.style.backgroundColor = 'white';
+      abajoIzquierda.style.backgroundColor = 'white';
+      abajoDerecha.style.backgroundColor = 'white';
+
+      if (data.x < window.innerWidth / 2 && data.y < window.innerHeight / 2) {
+        arribaIzquierda.style.backgroundColor = 'tomato';
+      }
+
+      if (data.x > window.innerWidth / 2 && data.y < window.innerHeight / 2) {
+        arribaDerecha.style.backgroundColor = 'tomato';
+      }
+
+      if (data.x < window.innerWidth / 2 && data.y > window.innerHeight / 2) {
+        abajoIzquierda.style.backgroundColor = 'tomato';
+      }
+
+      if (data.x > window.innerWidth / 2 && data.y > window.innerHeight / 2) {
+        abajoDerecha.style.backgroundColor = 'tomato';
+      }
+
+      // Mostrar las coordenadas en un elemento de texto
+      coordenadasText.textContent = `X: ${data.x.toFixed(2)}, Y: ${(data.y + window.scrollY).toFixed(2)}`;
+
+      // Mover el cursor
+      moveCursor(data.x, data.y);
+
+    }).begin();
+
+    let eyesClosedFrames = 0;
+    let eyeCascade;
+
+  </script>
+</body>
+</html>

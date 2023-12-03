@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .contenedor {
+      height: 100vh; 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .contenedor > div {
+      border: 1px solid black;
+    }
+  </style>
+  <script async src="https://docs.opencv.org/master/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="arriba-izquierda"></div>
+        <div class="arriba-derecha"></div>
+        <div class="abajo-izquierda"></div>
+        <div class="abajo-derecha"></div>
+      </div>
+    
+      <script>
+        const arribaIzquierda = document.querySelector('.arriba-izquierda');
+        const arribaDerecha = document.querySelector('.arriba-derecha');
+        const abajoIzquierda = document.querySelector('.abajo-izquierda');
+        const abajoDerecha = document.querySelector('.abajo-derecha');
+    
+        webgazer.setGazeListener(function(data, elapsedTime) {
+          if (data == null) {
+              return;
+          }
+    
+          arribaIzquierda.style.backgroundColor = 'white';
+          arribaDerecha.style.backgroundColor = 'white';
+          abajoIzquierda.style.backgroundColor = 'white';
+          abajoDerecha.style.backgroundColor = 'white';
+    
+    
+    
+          if (data.x < window.innerWidth / 2 && data.y < window.innerHeight / 2 ) {
+            arribaIzquierda.style.backgroundColor = 'tomato'
+          }
+    
+          if (data.x > window.innerWidth / 2 && data.y < window.innerHeight / 2 ) {
+            arribaDerecha.style.backgroundColor = 'tomato'
+          }
+    
+          if (data.x < window.innerWidth / 2 && data.y > window.innerHeight / 2 ) {
+            abajoIzquierda.style.backgroundColor = 'tomato'
+          }
+    
+          if (data.x > window.innerWidth / 2 && data.y > window.innerHeight / 2 ) {
+            abajoDerecha.style.backgroundColor = 'tomato'
+          }
+        </script>
+
+    <script src="/webgazer.js" type="text/javascript"></script>
+
+  <script>
+    let eyesClosedFrames = 0;
+    let eyeCascade;
+
+    function onOpenCvReady() {
+      eyeCascade = new cv.CascadeClassifier();
+      eyeCascade.load('haarcascade_eye.xml');
+
+      // Puedes cargar otros clasificadores según sea necesario
+
+      webgazer.setGazeListener(function (data, elapsedTime) {
+        if (data == null) {
+          return;
+        }
+
+        // Reiniciar el contador si se detecta la mirada
+        if (eyesClosedFrames > 0) {
+          eyesClosedFrames = 0;
+        }
+
+        // ... (resto del código para cambiar el color del fondo)
+
+        // Detección de parpadeo
+        const eyesRegion = new cv.Rect(data.x - 30, data.y - 15, 60, 30); // Ajustar según tu caso
+        const gray = new cv.Mat();
+        const eyes = new cv.Mat(video, eyesRegion);
+
+        cv.cvtColor(eyes, gray, cv.COLOR_RGBA2GRAY);
+        const eyesRects = new cv.RectVector();
+        eyeCascade.detectMultiScale(gray, eyesRects);
+
+        if (eyesRects.size() === 0) {
+          eyesClosedFrames++;
+          // Puedes ajustar el número de frames requeridos para considerar el parpadeo como cerrado
+          if (eyesClosedFrames > 5) {
+            console.log('Parpadeo detectado');
+            // Aquí puedes realizar acciones adicionales al detectar el parpadeo
+          }
+        }
+
+        eyes.delete();
+        gray.delete();
+        eyesRects.delete();
+      }).begin();
+    }
+  </script>
+</body>
+</html>
